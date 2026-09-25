@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa/ago1_RISC_hsa_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa/ago1_RISC_hsa_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa/ago1_RISC_hsa_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa/ago1_RISC_hsa_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/ago1_RISC_hsa/ago1_RISC_hsa_blast_output_sequences_aln_trimmed.nwk
+
+blast: 8.5437
+fetch: 0.2789
+align: 2.8824
+trim: 1.6259
+tree: 2.9470
+total: 16.2783

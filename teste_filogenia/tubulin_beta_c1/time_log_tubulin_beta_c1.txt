@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1/tubulin_beta_c1_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1/tubulin_beta_c1_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1/tubulin_beta_c1_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1/tubulin_beta_c1_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/tubulin_beta_c1/tubulin_beta_c1_blast_output_sequences_aln_trimmed.nwk
+
+blast: 8.3984
+fetch: 0.2798
+align: 0.4437
+trim: 0.7001
+tree: 1.2418
+total: 11.0641

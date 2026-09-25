@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa/GAPDH_hsa_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa/GAPDH_hsa_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa/GAPDH_hsa_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa/GAPDH_hsa_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/GAPDH_hsa/GAPDH_hsa_blast_output_sequences_aln_trimmed.nwk
+
+blast: 7.8944
+fetch: 0.3654
+align: 1.1775
+trim: 0.8224
+tree: 6.1966
+total: 16.4566

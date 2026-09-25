@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa/hsp90a1_hsa_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa/hsp90a1_hsa_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa/hsp90a1_hsa_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa/hsp90a1_hsa_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/hsp90a1_hsa/hsp90a1_hsa_blast_output_sequences_aln_trimmed.nwk
+
+blast: 9.1565
+fetch: 0.3100
+align: 2.2671
+trim: 1.3865
+tree: 39.8206
+total: 52.9413

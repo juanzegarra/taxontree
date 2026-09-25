@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa/dicer1_iso_CRA_a_hsa_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa/dicer1_iso_CRA_a_hsa_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa/dicer1_iso_CRA_a_hsa_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa/dicer1_iso_CRA_a_hsa_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/dicer1_iso_CRA_a_hsa/dicer1_iso_CRA_a_hsa_blast_output_sequences_aln_trimmed.nwk
+
+blast: 10.1717
+fetch: 0.2399
+align: 4.2793
+trim: 2.7674
+tree: 44.1843
+total: 61.6429

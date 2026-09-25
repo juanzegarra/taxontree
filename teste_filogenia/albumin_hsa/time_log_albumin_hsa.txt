@@ -1,0 +1,13 @@
+input: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa.fasta
+blast_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa/albumin_hsa_blast_output.txt
+sequence_file: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa/albumin_hsa_blast_output_sequences.fasta
+alignment_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa/albumin_hsa_blast_output_sequences_aln.fasta
+trimmed_alignment: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa/albumin_hsa_blast_output_sequences_aln_trimmed.fasta
+tree_output: /storage/supermicro/home/juanzegarra71/teste_diamondvblast/teste_filogenia/albumin_hsa/albumin_hsa_blast_output_sequences_aln_trimmed.nwk
+
+blast: 8.8355
+fetch: 0.3187
+align: 2.2972
+trim: 1.3806
+tree: 12.7114
+total: 25.5438
