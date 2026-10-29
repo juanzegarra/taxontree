@@ -17,7 +17,7 @@ def run_command(command):
         raise
 
 
-def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/dedup_all_uniprot_conc"):
+def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/filtered_deduplicated_renamed_all_uniprot_conc", sequence_cap=1000):
     input_name = Path(fasta_file).stem
     blast_output = out_dir / f"{input_name}_blast_output.txt"
 
@@ -30,7 +30,7 @@ def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/dedup_al
         "-evalue", "1e-10",
         "-outfmt", "6",
         "-out", str(blast_output),
-        "-num_threads", "32",
+        "-num_threads", "8", "-max_target_seqs", sequence_cap
     ]
 
     run_command(command)
@@ -43,8 +43,8 @@ def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/dedup_al
 def fetch_sequences(
     blast_output,
     out_dir,
-    blast_db="/home/juanzegarra71/blastp/dedup_all_uniprot_conc",
-    sequence_cap=500
+    blast_db="/home/juanzegarra71/blastp/filtered_deduplicated_renamed_all_uniprot_conc",
+    sequence_cap=1000
 ):
     input_name = Path(blast_output).stem
 
@@ -103,7 +103,7 @@ def run_multiple_alignment(sequence_file, out_dir):
         "famsa",
         str(sequence_file),
         str(alignment_output),
-        "-t", "16",
+        "-t", "8",
         "-refine_mode", "auto",
     ]
 
