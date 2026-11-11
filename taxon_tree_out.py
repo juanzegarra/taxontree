@@ -17,20 +17,20 @@ def run_command(command):
         raise
 
 
-def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/filtered_deduplicated_renamed_all_uniprot_conc", sequence_cap=1000):
+def run_blast(fasta_file, out_dir, blast_db="/home/juanzegarra71/blastp/filtered_deduplicated_renamed_all_uniprot_conc", sequence_cap=1000, core_number="8"):
     input_name = Path(fasta_file).stem
     blast_output = out_dir / f"{input_name}_blast_output.txt"
 
     start = time.perf_counter()
 
     command = [
-        "blastp",
+        "blastp", "-task", "blastp-fast",
         "-query", str(fasta_file),
         "-db", blast_db,
         "-evalue", "1e-10",
         "-outfmt", "6",
         "-out", str(blast_output),
-        "-num_threads", "8", "-max_target_seqs", sequence_cap
+        "-num_threads", f"{core_number}f", "-max_target_seqs", str(sequence_cap)
     ]
 
     run_command(command)
@@ -93,7 +93,7 @@ def fetch_sequences(
     return sequence_output, elapsed
 
 
-def run_multiple_alignment(sequence_file, out_dir):
+def run_multiple_alignment(sequence_file, out_dir, core_number="8"):
     input_name = Path(sequence_file).stem
     alignment_output = out_dir / f"{input_name}_aln.fasta"
 
@@ -103,7 +103,7 @@ def run_multiple_alignment(sequence_file, out_dir):
         "famsa",
         str(sequence_file),
         str(alignment_output),
-        "-t", "8",
+        "-t", f"{core_number}",
         "-refine_mode", "auto",
     ]
 
@@ -134,14 +134,14 @@ def trim_alignment(alignment_file, out_dir):
     return trimmed_output, elapsed
 
 
-def run_tree_building(trimmed_alignment, out_dir):
+def run_tree_building(trimmed_alignment, out_dir, core_number="8"):
     input_name = Path(trimmed_alignment).stem
     tree_output = out_dir / f"{input_name}.nwk"
 
     start = time.perf_counter()
 
     command = [
-        "fasttree",
+        "VeryFastTree", "-threads", f"{core_number}",
         str(trimmed_alignment),
     ]
 
@@ -160,15 +160,16 @@ def run_tree_building(trimmed_alignment, out_dir):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print(
             f"Usage: python {Path(sys.argv[0]).name} "
-            "<input_fasta> <output_directory>"
+            "<input_fasta> <output_directory> <core_number>"
         )
         sys.exit(1)
 
     fasta_file = Path(sys.argv[1]).resolve()
     out_dir = Path(sys.argv[2]).resolve()
+    cores = str(sys.argv[3])
 
     if not fasta_file.exists():
         raise FileNotFoundError(
@@ -181,7 +182,7 @@ def main():
 
     blast_output, time_blast = run_blast(
         fasta_file,
-        out_dir
+        out_dir, core_number=cores
     )
 
     sequence_file, time_fetch = fetch_sequences(
@@ -191,7 +192,7 @@ def main():
 
     alignment_output, time_align = run_multiple_alignment(
         sequence_file,
-        out_dir
+        out_dir, core_number=cores
     )
 
     trimmed_alignment, time_trim = trim_alignment(
@@ -201,7 +202,7 @@ def main():
 
     tree_output, time_tree = run_tree_building(
         trimmed_alignment,
-        out_dir
+        out_dir, core_number=cores
     )
 
     time_total = time.perf_counter() - total_start

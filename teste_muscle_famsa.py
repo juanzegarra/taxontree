@@ -12,9 +12,8 @@ print(directories)
 
 def trim_alignment(alignment_file, out_dir):
     input_name = Path(alignment_file).stem
-    trimmed_output = out_dir / f"{input_name}_trimmed.fasta"
-
-    start = time.perf_counter()
+    # Ensure out_dir is a Path object so the '/' operator works
+    trimmed_output = Path(out_dir) / f"{input_name}_trimmed.fasta"
 
     command = [
         "trimal",
@@ -22,6 +21,13 @@ def trim_alignment(alignment_file, out_dir):
         "-out", str(trimmed_output),
         "-strictplus",
     ]
+
+    print(f"Trimming alignment: {alignment_file}")
+    # Actually execute the trimal command
+    subprocess.run(command, check=True)
+
+    # Return as string because run_command uses .replace() on the input_file
+    return str(trimmed_output)
 
 def monitor_resources(pid, program, iteration):
     pidstat_cmd = ["pidstat", "-T", "ALL", "-H", "-u", "-r", "-p", str(pid), "1"]
@@ -39,11 +45,11 @@ def run_command(program, input_file, i):
 
     # Use micromamba run -n <env> to execute within the correct environment
     famsa2_command = ["micromamba", "run", "-n", "famsa_env", "famsa", input_file, output, "-t", "8", "-refine_mode", "auto"]
-    muscle5_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-out", output, "-t", "8"]
-    muscle5_1core_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-out", output, "-t", "1"]
+    muscle5_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-output", output, "-t", "8"]
+    muscle5_1core_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-output", output, "-t", "1"]
     muscle3_command = ["micromamba", "run", "-n", "muscle_env", "muscle", "-in", input_file, "-out", output, "-maxiters", "8"]
     fasttree_command = ["fasttree", str(input_file)]
-    veryfast_command = ["veryfasttree", str(input_file)]
+    veryfast_command = ["VeryFastTree", str(input_file)]
 
     start = time.perf_counter()
 
@@ -78,64 +84,80 @@ def run_command(program, input_file, i):
             print(f"{program} program not in list of executable programs, exiting...")
             sys.exit()
 
-        pid, log_file = monitor_resources(process.pid, program,i)
+        pid, log_file = monitor_resources(process.pid, program, i)
+
+        # CRITICAL: Wait for the alignment/tree program to actually finish!
+        process.wait()
 
     except subprocess.CalledProcessError as e:
         print(f"Error performing {program} on input {input_file}: {e}")
         output = None
 
-
     elapsed = time.perf_counter() - start if output else "Nan"
     return output, elapsed
 
-def multiprocess_worker(program, seq_file, aligned_out, directory, i):
+def multiprocess_worker(args):
+    program, seq_file, directory, i = args
     output, exec_time = run_command(program, seq_file, i)
-    aligned_out.add((directory, output))
     result = f"{directory}\t{program}\t{i}\t{exec_time}\n"
-    return result
+    # Return the result string AND the alignment output data
+    return result, directory, output
 
 def main():
     iters = 10
     aln_programs = ["muscle3", "famsa", "muscle5", "muscle5_1core"]
     aligned_out = set()
 
-    # Open files outside the loop so they aren't overwritten for each directory
     with open("summary_times_programs_msa.tsv", "w") as f_msa:
         f_msa.write("Directory\tProgram\tIteration\tExecution\n")
+        f_msa.flush() # Force write header immediately
 
         for directory in directories:
             prefix = directory
             seq_file = os.path.join(directory, f"{prefix}_blast_output_sequences.fasta")
 
             tasks = []
-            # Check if path actually exists
             if os.path.isfile(seq_file):
                 for program in aln_programs:
                     for i in range(iters):
-                        # Create tasks to be executed by worker
-                        tasks.append((program,seq_file, aligned_out, directory, i))
-            with multiprocessing.Pool(processes=2) as pool:
-                results = pool.starmap(multiprocess_worker, tasks)
+                        # Pack arguments into a single tuple; remove aligned_out
+                        tasks.append((program, seq_file, directory, i))
 
-            for line in results:
-                f_msa.write(line)
+            with multiprocessing.Pool(processes=2) as pool:
+                # imap_unordered yields results the moment a worker finishes
+                for line, dir_out, out_file in pool.imap_unordered(multiprocess_worker, tasks):
+                    f_msa.write(line)
+                    f_msa.flush() # Force write loop output immediately
+
+                    if out_file: # Add to set in the main process
+                        aligned_out.add((dir_out, out_file))
 
     tree_programs = ["fasttree","veryfasttree"]
-    # Run FastTree on the generated alignments
 
     with open("summary_times_trees.tsv", "a") as f_trees:
         f_trees.write("Directory\tAlignment\tIteration\tExecution\n")
+        f_trees.flush() # Force write header immediately
+
         for directory, aln in aligned_out:
-            # Fixed regex to capture 1 or more alphanumeric characters
             aln_program_match = re.search(r"_([A-Za-z0-9_]+)_aln\.fasta", aln)
 
             if aln_program_match:
-                aln_program = aln_program_match.group(1)
-                for program in tree_programs:
-                    for i in range(iters):
-                        output, exec_time = run_command(program, aln)
-                        f_trees.write(f"{directory}\t{program}\t{i}\t{exec_time}\n")
+                # aln is already the full path to the alignment file.
+                trim_in = aln
 
+                try:
+                    # Run trimming ONCE per alignment file
+                    trim_out = trim_alignment(trim_in, directory)
+
+                    for program in tree_programs:
+                        for i in range(iters):
+                            # run_command now uses the trimmed alignment
+                            output, exec_time = run_command(program, trim_out, i)
+                            f_trees.write(f"{directory}\t{program}\t{i}\t{exec_time}\n")
+                            f_trees.flush() # Force write loop output immediately
+
+                except subprocess.CalledProcessError as e:
+                    print(f"Trimming failed for {trim_in}, skipping trees: {e}")
 
 if __name__ == "__main__":
     main()
