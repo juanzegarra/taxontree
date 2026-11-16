@@ -80,7 +80,9 @@ def get_LCA_from_node(node1, node2, ancestry_dict=defaultdict(list)):
         else:
 
 
-def find_tree_paralogs(tree, ancestry_dict)
+def find_tree_paralogs(tree, ancestry_dict):
+
+
 
 def main():
     tree_file = Path(sys.argv[1])
