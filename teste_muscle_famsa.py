@@ -45,7 +45,7 @@ def run_command(program, input_file, i):
 
     # Use micromamba run -n <env> to execute within the correct environment
     famsa2_command = ["micromamba", "run", "-n", "famsa_env", "famsa", input_file, output, "-t", "8", "-refine_mode", "auto"]
-    muscle5_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-output", output, "-t", "8"]
+    muscle5_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-output", output, "-threads", "8"]
     muscle5_1core_command = ["micromamba", "run", "-n", "famsa_env", "muscle", "-super5", input_file, "-output", output, "-t", "1"]
     muscle3_command = ["micromamba", "run", "-n", "muscle_env", "muscle", "-in", input_file, "-out", output, "-maxiters", "8"]
     fasttree_command = ["fasttree", str(input_file)]
