@@ -98,6 +98,11 @@ def build_fasta_db(db, fasta_file, cursor):
                 if match:
                     match[1]
 
+def uniprot_worker():
+
+def fasta_to_proteome(fasta_file, fasta_db, conn):
+    records = SeqIO.parse()
+
 def main():
 
     result_dict = trasverse_ftp_dir(PP_FTP)
